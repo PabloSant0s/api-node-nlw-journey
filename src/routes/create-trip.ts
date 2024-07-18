@@ -13,6 +13,8 @@ export async function createTrip(app: FastifyInstance) {
     '/trips',
     {
       schema: {
+        tags: ['trips'],
+        summary: 'Create a new trip',
         body: z.object({
           destination: z.string().min(4),
           startsAt: z.coerce.date(),
@@ -21,6 +23,11 @@ export async function createTrip(app: FastifyInstance) {
           ownerName: z.string(),
           emailsToInvite: z.array(z.string().email()),
         }),
+        response: {
+          201: z.object({
+            tripId: z.string().uuid(),
+          }),
+        },
       },
     },
     async (request, reply) => {

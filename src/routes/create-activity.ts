@@ -10,6 +10,8 @@ export async function createActivity(app: FastifyInstance) {
     '/trips/:tripId/activities',
     {
       schema: {
+        tags: ['activities'],
+        summary: 'Create a new activity',
         params: z.object({
           tripId: z.string().uuid(),
         }),
@@ -17,6 +19,11 @@ export async function createActivity(app: FastifyInstance) {
           title: z.string().min(4),
           occursAt: z.coerce.date(),
         }),
+        response: {
+          201: z.object({
+            activityId: z.string().uuid(),
+          }),
+        },
       },
     },
     async (request, reply) => {

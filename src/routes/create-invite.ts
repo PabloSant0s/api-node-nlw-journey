@@ -13,12 +13,19 @@ export async function createInvite(app: FastifyInstance) {
     '/trips/:tripId/invites',
     {
       schema: {
+        tags: ['participants'],
+        summary: 'Create a new invite for a trip',
         params: z.object({
           tripId: z.string().uuid(),
         }),
         body: z.object({
           email: z.string().email(),
         }),
+        response: {
+          201: z.object({
+            participantId: z.string().uuid(),
+          }),
+        },
       },
     },
     async (request, reply) => {

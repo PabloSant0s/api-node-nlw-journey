@@ -9,9 +9,21 @@ export async function getParticipant(app: FastifyInstance) {
     '/participants/:participantId',
     {
       schema: {
+        tags: ['participants'],
+        summary: 'Get participant details',
         params: z.object({
           participantId: z.string().uuid(),
         }),
+        response: {
+          200: z.object({
+            participant: z.object({
+              id: z.string().uuid(),
+              name: z.string().nullable(),
+              email: z.string().email(),
+              isConfirmed: z.boolean(),
+            }),
+          }),
+        },
       },
     },
     async (request, reply) => {

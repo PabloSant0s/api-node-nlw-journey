@@ -10,9 +10,28 @@ export async function getActivities(app: FastifyInstance) {
     '/trips/:tripId/activities',
     {
       schema: {
+        tags: ['activities'],
+        summary: 'Get all activities',
         params: z.object({
           tripId: z.string().uuid(),
         }),
+        response: {
+          200: z.object({
+            activities: z.array(
+              z.object({
+                date: z.coerce.date(),
+                activities: z.array(
+                  z.object({
+                    id: z.string().uuid(),
+                    title: z.string(),
+                    occursAt: z.coerce.date(),
+                    tripId: z.string().uuid(),
+                  }),
+                ),
+              }),
+            ),
+          }),
+        },
       },
     },
     async (request, reply) => {
@@ -44,7 +63,7 @@ export async function getActivities(app: FastifyInstance) {
       }).map((_, index) => {
         const date = dayjs(trip.startsAt).add(index, 'days')
         return {
-          date: date.toISOString(),
+          date: date.toDate(),
           activities: trip.activities.filter((activity) =>
             dayjs(activity.occursAt).isSame(date, 'day'),
           ),
